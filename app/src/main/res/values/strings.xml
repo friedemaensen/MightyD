@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">MightyD</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="nav_tv_1">Bearbeitet von:</string>
+    <string name="nav_tv_2">Po. Tato</string>
+    <string name="nav_tv_3">Pi. Neapple</string>
+    <string name="title_activity_maps">Map</string>
+
+    <string name="gpsConfirmation_message"> GPS ist nicht aktiviert. Um alle Funktionen dieser Anwendung nutzen zu können, müssen Sie GPS aktivieren. Wollen Sie zu den Einstellungen weitergeleitet werden?</string>
+    <string name="gpsConfirmation_yes">Ja</string>
+    <string name="gpsConfirmation_no">Nein</string>
+
+    <string name="nav_last_tracks">Letzte Tracks</string>
+    <string name ="nav_imprint">Impressum</string>
+
+</resources>
