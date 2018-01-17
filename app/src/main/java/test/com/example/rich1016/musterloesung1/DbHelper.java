@@ -9,6 +9,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.location.Location;
+
+import java.util.ArrayList;
+
+import test.com.example.rich1016.musterloesung1.Helper.TrackHandler;
 
 /**
  * Created by wech1025 on 29.11.2017.
@@ -16,6 +21,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DbHelper extends SQLiteOpenHelper {
     private static DbHelper instance;
+    private ArrayList<Long> timestampArray = new ArrayList<>();
+
 
     private DbHelper(Context context) {
         super(context, "track_db", null, 1);
@@ -37,6 +44,36 @@ public class DbHelper extends SQLiteOpenHelper {
             instance = new DbHelper(context);
         }
         return instance;
+    }
+
+    public void saveTrackToKooDB (ArrayList<Location> mLocationList, Track track) {
+
+        timestampArray = TrackHandler.getInstance(this).getTimestampArray(); //TODO: Context, please what?!
+        for (int i = 0; i < mLocationList.size(); i++) {
+            SQLiteDatabase kooDB = this.getWritableDatabase();
+            ContentValues valuesKoo = new ContentValues();
+            final String TRACK_KEY_VALUE = getCurrentPrimaryKey(track);
+            valuesKoo.put(DbContract.KoordinateTable.COLUMN_Koordinate_TIME, timestampArray.get(i));
+        }
+    }
+
+    public void startTracking (Track track) {
+        SQLiteDatabase trackDB = this.getWritableDatabase();
+        ContentValues valuesTrack = new ContentValues();
+        valuesTrack.put(DbContract.TrackTable.COLUMN_Track_DATE, track.getDate());
+    }
+
+    public String getCurrentPrimaryKey (Track track) {
+        String selectQuery = "SELECT * FROM " + DbContract.TrackTable.TABLE_NAME;
+        SQLiteDatabase trackDB = this.getReadableDatabase();
+        Cursor cursor = trackDB.rawQuery(selectQuery, null);
+        String id = cursor.getString(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_ID));
+
+        cursor.close();
+        trackDB.close();
+
+        return id;
+
     }
 
 

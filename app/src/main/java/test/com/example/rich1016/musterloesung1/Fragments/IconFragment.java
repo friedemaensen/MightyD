@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import test.com.example.rich1016.musterloesung1.DbHelper;
 import test.com.example.rich1016.musterloesung1.R;
 
 /**
@@ -20,6 +21,7 @@ import test.com.example.rich1016.musterloesung1.R;
 
 public class IconFragment extends DialogFragment implements View.OnClickListener {
 
+
     public String mode;
     View view;
 
@@ -27,11 +29,11 @@ public class IconFragment extends DialogFragment implements View.OnClickListener
         return mode;
     }
 
-    private OnFragmentInteractionListener mListener;
-
-    public IconFragment (){
-
+    public void setMode(String mode) {
+        this.mode = mode;
     }
+
+    private OnFragmentInteractionListener mListener;
 
     @Override
     public void onStart() {

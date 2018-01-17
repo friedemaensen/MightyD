@@ -45,6 +45,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.security.Timestamp;
+import java.util.ArrayList;
+import java.lang.Object;
+
 import test.com.example.rich1016.musterloesung1.Fragments.IconFragment;
 import test.com.example.rich1016.musterloesung1.Helper.TrackHandler;
 
@@ -142,6 +146,11 @@ public class MainActivity extends AppCompatActivity
         createLocationRequest();
 
 
+
+
+
+
+
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
@@ -156,6 +165,7 @@ public class MainActivity extends AppCompatActivity
                         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                         if (mTracking) {
                             mTrackHandler.draw(location);
+
                         }
                     }
 
