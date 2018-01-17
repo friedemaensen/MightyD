@@ -46,14 +46,16 @@ public class DbHelper extends SQLiteOpenHelper {
         return instance;
     }
 
-    public void saveTrackToKooDB (ArrayList<Location> mLocationList, Track track) {
+    public void saveTrackToKooDB (ArrayList<Location> mLocationList, Track track, Context context) {
 
-        timestampArray = TrackHandler.getInstance(this).getTimestampArray(); //TODO: Context, please what?!
+        timestampArray = TrackHandler.getInstance(context).getTimestampArray();
+        final String TRACK_KEY_VALUE = getCurrentPrimaryKey(track);
         for (int i = 0; i < mLocationList.size(); i++) {
             SQLiteDatabase kooDB = this.getWritableDatabase();
             ContentValues valuesKoo = new ContentValues();
-            final String TRACK_KEY_VALUE = getCurrentPrimaryKey(track);
+
             valuesKoo.put(DbContract.KoordinateTable.COLUMN_Koordinate_TIME, timestampArray.get(i));
+            valuesKoo.put(DbContract.KoordinateTable.COLUMN_Koordinate_KOO, mLocationList.get(i).toString());
         }
     }
 

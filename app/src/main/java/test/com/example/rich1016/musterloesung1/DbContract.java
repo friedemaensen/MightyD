@@ -32,8 +32,8 @@ public class DbContract {
         public static final String TABLE_NAME = "koo_table";
         public static final String COLUMN_Koordinate_TIME = "koo_time";
         public static final String COLUMN_Koordinate_TRACKNAME = "koo_trackname";
-        public static final String COLUMN_Koordinate_KOOLA = "koo_koola";
-        public static final String COLUMN_Koordinate_KOOLO = "koo_koole";
+        public static final String COLUMN_Koordinate_KOO = "koo_koo";
+        //public static final String COLUMN_Koordinate_KOOLO = "koo_koole";
 
     }
 
@@ -41,7 +41,7 @@ public class DbContract {
             KoordinateTable._ID + " INTEGER PRIMARY KEY," +
             KoordinateTable.COLUMN_Koordinate_TIME + " TEXT," +
             KoordinateTable.COLUMN_Koordinate_TRACKNAME + " TEXT," +
-            KoordinateTable.COLUMN_Koordinate_KOOLA + " TEXT," +
-            KoordinateTable.COLUMN_Koordinate_KOOLO + " TEXT,";
+            KoordinateTable.COLUMN_Koordinate_KOO + " TEXT)";
+          //  KoordinateTable.COLUMN_Koordinate_KOOLO + " TEXT,";
 }
 

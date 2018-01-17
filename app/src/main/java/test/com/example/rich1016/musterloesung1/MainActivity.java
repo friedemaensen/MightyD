@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity
     private boolean mTracking = false;
     private TrackHandler mTrackHandler;
     FloatingActionButton buttonModeIcon;
+    Track track;
 
 
 
@@ -106,6 +107,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
 
+                track = new Track();
                 if (!mTracking) {
 
                     buttonTrack.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cast_ic_mini_controller_stop));
@@ -114,6 +116,7 @@ public class MainActivity extends AppCompatActivity
 
                 } else {
                     buttonTrack.setImageDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.ic_add_black_24dp));
+                    DbHelper.getInstance(MainActivity.this).saveTrackToKooDB(TrackHandler.getInstance(MainActivity.this).getmLocationList(), track, MainActivity.this);
                     mTracking = false;
                     mTrackHandler.stopDraw();
 
