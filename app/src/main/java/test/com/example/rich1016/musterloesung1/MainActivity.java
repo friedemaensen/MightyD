@@ -25,6 +25,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -50,11 +52,12 @@ import java.util.ArrayList;
 import java.lang.Object;
 
 import test.com.example.rich1016.musterloesung1.Fragments.IconFragment;
+import test.com.example.rich1016.musterloesung1.Fragments.NameFragment;
 import test.com.example.rich1016.musterloesung1.Helper.TrackHandler;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, IconFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, IconFragment.OnFragmentInteractionListener, NameFragment.OnFragmentInteractionListener {
 
 
     private GoogleMap mMap;
@@ -109,14 +112,16 @@ public class MainActivity extends AppCompatActivity
 
                 track = new Track();
                 if (!mTracking) {
-
+                    track = new Track();
                     buttonTrack.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cast_ic_mini_controller_stop));
                     mTracking = true;
                     mMap.clear();
 
                 } else {
                     buttonTrack.setImageDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.ic_add_black_24dp));
-                    DbHelper.getInstance(MainActivity.this).saveTrackToKooDB(TrackHandler.getInstance(MainActivity.this).getmLocationList(), track, MainActivity.this);
+                    NameFragment nameFragment = new NameFragment();
+                    nameFragment.show(getSupportFragmentManager(), "");
+                    //DbHelper.getInstance(MainActivity.this).saveTrackToKooDB(TrackHandler.getInstance(MainActivity.this).getmLocationList(), track, MainActivity.this);
                     mTracking = false;
                     mTrackHandler.stopDraw();
 
@@ -179,7 +184,7 @@ public class MainActivity extends AppCompatActivity
 
         //Hier wird ListView erstellt
 
-        final ListView listView = (ListView) findViewById(R.id.listView);
+        /*final ListView listView = (ListView) findViewById(R.id.listView);
         userListViewAdapter = new UserListViewAdapter(this, UserData.getInstance().getUserList());
         listView.setAdapter(userListViewAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -190,7 +195,7 @@ public class MainActivity extends AppCompatActivity
                 intent.putExtra(KEY, position);
                 startActivity(intent);
             }
-        });
+        });*/
     }
 
 
@@ -215,9 +220,9 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         //Hier wird Listview aufgerufen
-        ListView listView = (ListView) findViewById(R.id.listView);
+       /* ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(userListViewAdapter);
-        userListViewAdapter.notifyDataSetChanged();
+        userListViewAdapter.notifyDataSetChanged();*/
         if (mRequestingLocationUpdates) {
             startLocationUpdates();
         }

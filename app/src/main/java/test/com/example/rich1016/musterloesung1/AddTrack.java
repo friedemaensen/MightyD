@@ -50,7 +50,7 @@ public class AddTrack extends AppCompatActivity {
 
         mLocationList = TrackHandler.getInstance(this).getmLocationList();
 
-        DbHelper.getInstance(this).saveTrackToKooDB(mLocationList, track);
+        //DbHelper.getInstance(this).saveTrackToKooDB(mLocationList, track);
         //track.setName(editText.getText//Eingabe im Dialog durch User//);
     }
 

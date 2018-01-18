@@ -8,17 +8,18 @@
     android:gravity="center_horizontal"
     android:orientation="horizontal"
     android:padding="16dp">
+    <!--android:background="#dddddd"-->
 
     <LinearLayout
-        android:text="Wählen Sie ein Verkehrsmittel aus:"
+        android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_marginTop="96dp"
-        android:id="@+id/linearLayout">
+        android:orientation="horizontal"
+        android:text="Wählen Sie ein Verkehrsmittel aus:">
 
         <ImageButton
             android:id="@+id/button_auto"
@@ -56,20 +57,21 @@
             android:layout_margin="8dp"
             android:background="@drawable/icons8fahrrad" />
 
+
     </LinearLayout>
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
-        android:text="Wählen Sie ein Verkehrsmittel aus:"
-        android:layout_alignParentTop="true"
         android:layout_alignLeft="@+id/linearLayout"
+        android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/linearLayout"
-        android:textColor="#FFFFFF"
         android:layout_marginLeft="46dp"
-        android:layout_marginStart="46dp" />
+        android:layout_marginStart="46dp"
+        android:layout_marginTop="52dp"
+        android:text="@string/choose_vm"
+        android:textColor="#FFFFFF" />
 
 
 </RelativeLayout>

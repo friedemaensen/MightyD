@@ -17,4 +17,9 @@
     <string name="nav_last_tracks">Letzte Tracks</string>
     <string name ="nav_imprint">Impressum</string>
 
+    <string name="abbruch">Abbruch</string>
+    <string name="savebutton">Speichern</string>
+
+    <string name="choose_vm">Bitte wählen Sie ein Verkehrsmittel aus:</string>
+
 </resources>
