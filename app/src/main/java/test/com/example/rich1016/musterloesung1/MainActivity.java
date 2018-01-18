@@ -177,7 +177,20 @@ public class MainActivity extends AppCompatActivity
         };
         startLocationUpdates();
 
+        //Hier wird ListView erstellt
 
+        final ListView listView = (ListView) findViewById(R.id.listView);
+        userListViewAdapter = new UserListViewAdapter(this, UserData.getInstance().getUserList());
+        listView.setAdapter(userListViewAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, AusgabeActivity.class);
+
+                intent.putExtra(KEY, position);
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -201,6 +214,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        //Hier wird Listview aufgerufen
+        ListView listView = (ListView) findViewById(R.id.listView);
+        listView.setAdapter(userListViewAdapter);
+        userListViewAdapter.notifyDataSetChanged();
         if (mRequestingLocationUpdates) {
             startLocationUpdates();
         }
