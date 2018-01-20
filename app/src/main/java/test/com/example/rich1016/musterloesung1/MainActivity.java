@@ -25,8 +25,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -46,10 +44,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
-
-import java.security.Timestamp;
-import java.util.ArrayList;
-import java.lang.Object;
 
 import test.com.example.rich1016.musterloesung1.Fragments.IconFragment;
 import test.com.example.rich1016.musterloesung1.Fragments.NameFragment;
@@ -71,11 +65,30 @@ public class MainActivity extends AppCompatActivity
     private Location mCurrentLocation;
     private LocationCallback mLocationCallback;
     private boolean mRequestingLocationUpdates;
-    private boolean mTracking = false;
+    private boolean isTracking = false;
     private TrackHandler mTrackHandler;
     FloatingActionButton buttonModeIcon;
     Track track;
+    long startTime;
+    long calcDuration;
+    LatLng startLoc;
+    LatLng stopLoc;
 
+    public void startTracking() {
+        track = new Track();
+        track.setId(DbHelper.getInstance(MainActivity.this).getCurrentPrimaryKey(track) + 1);
+        startTime = System.currentTimeMillis();
+        track.setDate(Long.toString(startTime));
+    }
+
+    public void stopTracking() {
+        if (System.currentTimeMillis()>startTime) {
+            calcDuration = System.currentTimeMillis() - startTime;
+        }
+        track.setDuration(Long.toString(calcDuration));
+        //TODO Calc Distance (and add to track-object) (MyWay->NavDrawer.class->Lines 376-386)
+        //TODO set remaining params for track-obj
+    }
 
 
     @Override
@@ -110,19 +123,17 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
 
-                track = new Track();
-                if (!mTracking) {
-                    track = new Track();
+                if (!isTracking) {
                     buttonTrack.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cast_ic_mini_controller_stop));
-                    mTracking = true;
+                    isTracking = true;
                     mMap.clear();
-
+                    startTracking();
                 } else {
                     buttonTrack.setImageDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.ic_add_black_24dp));
                     NameFragment nameFragment = new NameFragment();
                     nameFragment.show(getSupportFragmentManager(), "");
-                    //DbHelper.getInstance(MainActivity.this).saveTrackToKooDB(TrackHandler.getInstance(MainActivity.this).getmLocationList(), track, MainActivity.this);
-                    mTracking = false;
+                    stopTracking();
+                    isTracking = false;
                     mTrackHandler.stopDraw();
 
                 }
@@ -171,7 +182,7 @@ public class MainActivity extends AppCompatActivity
                                 .bearing(0)
                                 .build();
                         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                        if (mTracking) {
+                        if (isTracking) {
                             mTrackHandler.draw(location);
 
                         }

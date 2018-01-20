@@ -9,11 +9,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.location.Location;
 
 import java.util.ArrayList;
-
-import test.com.example.rich1016.musterloesung1.Helper.TrackHandler;
 
 /**
  * Created by wech1025 on 29.11.2017.
@@ -26,7 +23,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private DbHelper(Context context) {
         super(context, "track_db", null, 1);
-
     }
 
     @Override
@@ -46,67 +42,62 @@ public class DbHelper extends SQLiteOpenHelper {
         return instance;
     }
 
-    public void saveTrackToKooDB (ArrayList<Location> mLocationList, Track track, Context context) {
+    public int getCurrentPrimaryKey(Track track) {
+        SQLiteDatabase database = this.getReadableDatabase();
+        String SelectMax = "SELECT MAX(" + DbContract.TrackTable.COLUMN_Track_ID + ") FROM TABLE" +
+                DbContract.TrackTable.TABLE_NAME;
+        Cursor cursor = database.rawQuery(SelectMax, null);
 
-        timestampArray = TrackHandler.getInstance(context).getTimestampArray();
-        final String TRACK_KEY_VALUE = getCurrentPrimaryKey(track);
-        for (int i = 0; i < mLocationList.size(); i++) {
-            SQLiteDatabase kooDB = this.getWritableDatabase();
-            ContentValues valuesKoo = new ContentValues();
-
-            valuesKoo.put(DbContract.KoordinateTable.COLUMN_Koordinate_TIME, timestampArray.get(i));
-            valuesKoo.put(DbContract.KoordinateTable.COLUMN_Koordinate_KOO, mLocationList.get(i).toString());
+        if (cursor > 0) {
+            return cursor.getInt(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_ID));
         }
-    }
-
-    public void startTracking (Track track) {
-        SQLiteDatabase trackDB = this.getWritableDatabase();
-        ContentValues valuesTrack = new ContentValues();
-        valuesTrack.put(DbContract.TrackTable.COLUMN_Track_DATE, track.getDate());
-    }
-
-    public String getCurrentPrimaryKey (Track track) {
-        String selectQuery = "SELECT * FROM " + DbContract.TrackTable.TABLE_NAME;
-        SQLiteDatabase trackDB = this.getReadableDatabase();
-        Cursor cursor = trackDB.rawQuery(selectQuery, null);
-        String id = cursor.getString(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_ID));
-
         cursor.close();
-        trackDB.close();
-
-        return id;
-
+        database.close();
     }
 
+    public void getTrackDB() {
+        String selectQ = "SELECT * FROM " + DbContract.TrackTable.TABLE_NAME;
+        SQLiteDatabase database = this.getReadableDatabase();
+        Cursor cursor = database.rawQuery(selectQ, null);
 
-
-/*    public void funktion(Track track) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues valuesUser = new ContentValues();
-        valuesUser.put(DbContract.KoordinateTable.COLUMN_NAME_USERNAME, track.getName());
-        valuesUser.put(DbContract.KoordinateTable.COLUMN_NAME_BIRTHDAY, track.getGeburtsta());
-        valuesUser.put(DbContract.KoordinateTable.COLUMN_NAME_GENDER, track.getGeschlecht());
-        db.insert(DbContract.KoordinateTable.TABLE_NAME, null, valuesUser);
-        db.close();
-    }*/
-  /*  public void funktion2() {
-        String selectQuery = "SELECT * FROM " + DbContract.UserTable.TABLE_NAME;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery,null);
         if (cursor.moveToFirst()) {
             do {
-                String userName = cursor.getString(cursor.getColumnIndex(DbContract.UserTable.COLUMN_NAME_USERNAME));
-                String userGeburtstag = cursor.getString(cursor.getColumnIndex(DbContract.UserTable.COLUMN_NAME_BIRTHDAY));
-                String userGeschlecht = cursor.getString(cursor.getColumnIndex(DbContract.UserTable.COLUMN_NAME_GENDER));
-                User user = new User();
-                user.setNamen(userName);
-                user.setGeburtstag(userGeburtstag);
-                user.setGeschlecht(userGeschlecht);
-                UserData.getInstance().addUser(user);
+                int id = cursor.getInt(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_ID));
+                String name = cursor.getString(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_NAME));
+                String mode = cursor.getString(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_MODE));
+                String date = cursor.getString(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_DATE));
+                String length = cursor.getString(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_LENGTH));
+                String duration = cursor.getString(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_DURATION));
+
+                Track track = new Track();
+
+                track.setId(id);
+                track.setName(name);
+                track.setMode(mode);
+                track.setDuration(duration);
+                track.setDate(date);
+                track.setLength(length);
+
+                TrackData.getInstance().addTrackToList(track);
 
             } while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
-    }*/
+        database.close();
+    }
+
+    public void saveTrackToDB (Track track) {
+
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues trackVals = new ContentValues();
+        trackVals.put(DbContract.TrackTable.COLUMN_Track_ID, track.getId());
+        trackVals.put(DbContract.TrackTable.COLUMN_Track_NAME, track.getName());
+        trackVals.put(DbContract.TrackTable.COLUMN_Track_DATE, track.getDate());
+        trackVals.put(DbContract.TrackTable.COLUMN_Track_MODE, track.getMode());
+        trackVals.put(DbContract.TrackTable.COLUMN_Track_DURATION, track.getDuration());
+        trackVals.put(DbContract.TrackTable.COLUMN_Track_LENGTH, track.getLength());
+
+        database.insert(DbContract.TrackTable.TABLE_NAME, null, trackVals);
+        database.close();
+    }
 }
