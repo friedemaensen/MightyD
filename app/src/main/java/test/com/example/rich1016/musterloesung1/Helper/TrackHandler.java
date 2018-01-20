@@ -44,7 +44,28 @@ public class TrackHandler {
         mLocationList = new ArrayList<>();
     }
 
+    /*public Location getCurrLocation () {
+        double lat = mLocation.getLatitude()
+    }*/
+    private LatLng convertToLatLng (Location location) {
+        double lat = location.getLatitude();
+        double lng = location.getLongitude();
+        LatLng latLng = new LatLng(lat, lng);
+        return latLng;
+    }
 
+    double dist;
+
+    public double calculateLength (ArrayList<Location> locations) {
+        for (int i = 0; i < locations.size(); i++){
+            Location lastLoc = locations.get(i);
+            Location nextLoc = locations.get(i+1);
+
+
+            dist = dist + (double) lastLoc.distanceTo(nextLoc);
+        }
+        return dist;
+    }
 
     public void draw(Location location) {
 
@@ -54,7 +75,8 @@ public class TrackHandler {
         PolylineOptions options = new PolylineOptions().width(12).color(Color.CYAN);
         for (int i = 0; i < mLocationList.size(); i++) {
             Location tempLocation = mLocationList.get(i);
-
+            Location lastLocation = mLocationList.get(i-1);
+            Location nextLocation = mLocationList.get(i);
             lat = tempLocation.getLatitude();
             lon = tempLocation.getLongitude();
             LatLng latlng = new LatLng(lat, lon);
@@ -67,6 +89,8 @@ public class TrackHandler {
     public ArrayList<Long> getTimestampArray() {
         return timestampArray;
     }
+
+
 
     public void stopDraw(){
         mLocationList.clear();

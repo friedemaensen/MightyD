@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by wech1025 on 29.11.2017.
@@ -42,17 +43,23 @@ public class DbHelper extends SQLiteOpenHelper {
         return instance;
     }
 
-    public int getCurrentPrimaryKey(Track track) {
+    public int getMaxID() {
         SQLiteDatabase database = this.getReadableDatabase();
-        String SelectMax = "SELECT MAX(" + DbContract.TrackTable.COLUMN_Track_ID + ") FROM TABLE" +
+        String SelectMax = "SELECT MAX(" + DbContract.TrackTable.COLUMN_Track_ID + ") FROM " +
                 DbContract.TrackTable.TABLE_NAME;
         Cursor cursor = database.rawQuery(SelectMax, null);
+        int max;
 
-        if (cursor > 0) {
-            return cursor.getInt(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_ID));
+        if (cursor.getCount() > 0) {
+            max = cursor.getInt(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_ID));
+        } else {
+            max = 0;
         }
         cursor.close();
         database.close();
+        return max;
+
+
     }
 
     public void getTrackDB() {
@@ -66,7 +73,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 String name = cursor.getString(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_NAME));
                 String mode = cursor.getString(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_MODE));
                 String date = cursor.getString(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_DATE));
-                String length = cursor.getString(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_LENGTH));
+                double length = cursor.getDouble(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_LENGTH));
                 String duration = cursor.getString(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_DURATION));
 
                 Track track = new Track();

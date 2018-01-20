@@ -10,7 +10,7 @@ public class Track {
     private String date;
     private String mode;
     private String duration;
-    private String length;
+    private double length;
 
     public String getName() {
         return name;
@@ -52,11 +52,11 @@ public class Track {
         this.duration = duration;
     }
 
-    public String getLength() {
+    public double getLength() {
         return length;
     }
 
-    public void setLength(String length) {
+    public void setLength(double length) {
         this.length = length;
     }
 }

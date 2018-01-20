@@ -45,6 +45,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.ArrayList;
+
 import test.com.example.rich1016.musterloesung1.Fragments.IconFragment;
 import test.com.example.rich1016.musterloesung1.Fragments.NameFragment;
 import test.com.example.rich1016.musterloesung1.Helper.TrackHandler;
@@ -71,14 +73,19 @@ public class MainActivity extends AppCompatActivity
     Track track;
     long startTime;
     long calcDuration;
-    LatLng startLoc;
-    LatLng stopLoc;
+    private LatLng startLoc;
+    private LatLng stopLoc;
 
     public void startTracking() {
         track = new Track();
-        track.setId(DbHelper.getInstance(MainActivity.this).getCurrentPrimaryKey(track) + 1);
+        track.setId(DbHelper.getInstance(MainActivity.this).getMaxID() + 1);
         startTime = System.currentTimeMillis();
         track.setDate(Long.toString(startTime));
+        createLocationRequest();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
     }
 
     public void stopTracking() {
@@ -86,8 +93,12 @@ public class MainActivity extends AppCompatActivity
             calcDuration = System.currentTimeMillis() - startTime;
         }
         track.setDuration(Long.toString(calcDuration));
-        //TODO Calc Distance (and add to track-object) (MyWay->NavDrawer.class->Lines 376-386)
-        //TODO set remaining params for track-obj
+        ArrayList<Location> locations = TrackHandler.getInstance(MainActivity.this).getmLocationList();
+        track.setLength(TrackHandler.getInstance(MainActivity.this).calculateLength(locations));
+
+        Log.i("DATEN", Integer.toString(DbHelper.getInstance(MainActivity.this).getMaxID()));
+
+        //TODO setMode
     }
 
 
