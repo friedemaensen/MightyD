@@ -26,6 +26,7 @@ public class NameFragment extends DialogFragment implements View.OnClickListener
 
 
     public String trackname;
+    private OnFragmentInteractionListener listener;
     View view;
 
     public String getTrackname() {
@@ -66,6 +67,7 @@ public class NameFragment extends DialogFragment implements View.OnClickListener
             @Override
             public void onClick(View view) {
                 //TODO setName somehow...??
+                listener.onFragmentInteraction(view.);
             }
         });
         Button abbrechen = (Button) view.findViewById(R.id.abbrechen);
