@@ -43,6 +43,18 @@ public class DbHelper extends SQLiteOpenHelper {
         return instance;
     }
 
+    public int getNumberOfRows() {
+        SQLiteDatabase database = this.getReadableDatabase();
+        String count = "SELECT COUNT(*) FROM " + DbContract.TrackTable.TABLE_NAME;
+        Cursor cursor = database.rawQuery(count, null);
+        int max = cursor.getCount();
+
+        database.close();
+        cursor.close();
+
+        return max;
+    }
+
     public int getMaxID() {
         SQLiteDatabase database = this.getReadableDatabase();
         String SelectMax = "SELECT MAX(" + DbContract.TrackTable.COLUMN_Track_ID + ") FROM " +

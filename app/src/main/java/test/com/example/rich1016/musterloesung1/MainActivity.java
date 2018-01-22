@@ -78,7 +78,9 @@ public class MainActivity extends AppCompatActivity
 
     public void startTracking() {
         track = new Track();
-        track.setId(DbHelper.getInstance(MainActivity.this).getMaxID() + 1);
+        //track.setId(DbHelper.getInstance(MainActivity.this).getMaxID() + 1);
+        track.setId(DbHelper.getInstance(MainActivity.this).getNumberOfRows() + 1);
+
         startTime = System.currentTimeMillis();
         track.setDate(Long.toString(startTime));
         createLocationRequest();
@@ -95,8 +97,12 @@ public class MainActivity extends AppCompatActivity
         track.setDuration(Long.toString(calcDuration));
         ArrayList<Location> locations = TrackHandler.getInstance(MainActivity.this).getmLocationList();
         track.setLength(TrackHandler.getInstance(MainActivity.this).calculateLength(locations));
+        track.setMode("EXAMPLE MODE");
+        //TODO get name from NameFragment
+        //TODO save on NameFragment.saveButton
+        DbHelper.getInstance(MainActivity.this).saveTrackToDB(track);
 
-        Log.i("DATEN", Integer.toString(DbHelper.getInstance(MainActivity.this).getMaxID()));
+        Log.i("DATEN", Integer.toString(DbHelper.getInstance(MainActivity.this).getNumberOfRows()));
 
         //TODO setMode
     }
@@ -137,7 +143,7 @@ public class MainActivity extends AppCompatActivity
                 if (!isTracking) {
                     buttonTrack.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cast_ic_mini_controller_stop));
                     isTracking = true;
-                    mMap.clear();
+                    //mMap.clear();
                     startTracking();
                 } else {
                     buttonTrack.setImageDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.ic_add_black_24dp));

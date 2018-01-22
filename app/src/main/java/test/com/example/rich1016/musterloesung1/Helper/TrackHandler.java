@@ -75,7 +75,11 @@ public class TrackHandler {
         PolylineOptions options = new PolylineOptions().width(12).color(Color.CYAN);
         for (int i = 0; i < mLocationList.size(); i++) {
             Location tempLocation = mLocationList.get(i);
-            Location lastLocation = mLocationList.get(i-1);
+            if (i!=0) {
+                Location lastLocation = mLocationList.get(i-1);
+            } else {
+                Location lastLocation = mLocationList.get(0);
+            }
             Location nextLocation = mLocationList.get(i);
             lat = tempLocation.getLatitude();
             lon = tempLocation.getLongitude();

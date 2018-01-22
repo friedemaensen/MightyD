@@ -62,7 +62,12 @@ public class NameFragment extends DialogFragment implements View.OnClickListener
         EditText trackName = (EditText) view.findViewById(R.id.track_name);
         trackName.setOnClickListener(this);
         Button speichern = (Button) view.findViewById(R.id.speichern);
-        speichern.setOnClickListener(this);
+        speichern.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO setName somehow...??
+            }
+        });
         Button abbrechen = (Button) view.findViewById(R.id.abbrechen);
         abbrechen.setOnClickListener(this);
 
