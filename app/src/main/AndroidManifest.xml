@@ -50,7 +50,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".TrackDetailActivity" />
-        <activity android:name=".TrackOverviewActivity"></activity>
+        <activity android:name=".TrackOverviewActivity" />
+        <activity android:name=".ImprintActivity"></activity>
     </application>
 
 </manifest>

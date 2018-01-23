@@ -34,4 +34,6 @@
 
     <string name="map">Karte</string>
 
+    <string name="imprint">Diese App wurde erstellt von: \n\n  Friedemann von oppen \n  Jan Hauenstein \n  Christoph Welz \n  Felix Krüger \n\n an der HS Karlsruhe</string>
+
 </resources>

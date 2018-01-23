@@ -21,7 +21,6 @@ import test.com.example.rich1016.musterloesung1.R;
 
 public class IconFragment extends DialogFragment implements View.OnClickListener {
 
-
     public String mode;
     View view;
 
@@ -101,28 +100,28 @@ public class IconFragment extends DialogFragment implements View.OnClickListener
         switch (v.getId()){
             case R.id.button_bus:
                 mListener.onFragmentInteraction(v.getBackground());
-                dismiss();
                 mode = "Bus";
+                dismiss();
                 break;
             case R.id.button_auto:
                 mListener.onFragmentInteraction(v.getBackground());
-                dismiss();
                 mode = "Auto";
+                dismiss();
                 break;
             case R.id.button_fahrrad:
                 mListener.onFragmentInteraction(v.getBackground());
-                dismiss();
                 mode = "Fahrrad";
+                dismiss();
                 break;
             case R.id.button_gehen:
                 mListener.onFragmentInteraction(v.getBackground());
-                dismiss();
                 mode = "Gehen";
+                dismiss();
                 break;
             case R.id.button_tram:
                 mListener.onFragmentInteraction(v.getBackground());
-                dismiss();
                 mode = "Tram";
+                dismiss();
                 break;
 
 

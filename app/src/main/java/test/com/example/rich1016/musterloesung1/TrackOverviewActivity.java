@@ -1,10 +1,10 @@
 package test.com.example.rich1016.musterloesung1;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,7 +24,7 @@ public class TrackOverviewActivity extends AppCompatActivity {
         listView.setAdapter(trackListViewAdapter);
         trackListViewAdapter.notifyDataSetChanged();
 
-        Log.i("DATA", String.valueOf(DbHelper.getInstance(TrackOverviewActivity.this).getNumberOfRows()));
+        Log.i("DATA", String.valueOf(DbHelper.getInstance(TrackOverviewActivity.this).getNumberOfRowsTrackDB()));
         Log.i("DATA", String.valueOf(DbHelper.getInstance(TrackOverviewActivity.this).getLatestName()));
     }
 
@@ -32,6 +32,8 @@ public class TrackOverviewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_overview);
+
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         DbHelper.getInstance(TrackOverviewActivity.this).getTrackDB();
         /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

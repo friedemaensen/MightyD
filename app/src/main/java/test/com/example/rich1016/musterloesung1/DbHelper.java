@@ -10,9 +10,10 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.location.Location;
+import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by wech1025 on 29.11.2017.
@@ -30,6 +31,7 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(DbContract.SQL_CREATE_TRACK_TABLE);
+        sqLiteDatabase.execSQL(DbContract.SQL_CREATE_KOORDINATE_TABLE);
     }
 
     @Override
@@ -44,23 +46,24 @@ public class DbHelper extends SQLiteOpenHelper {
         return instance;
     }
 
-    public int getNumberOfRows() {
+    public int getNumberOfRowsTrackDB() {
         SQLiteDatabase database = this.getReadableDatabase();
-
         int max = (int) DatabaseUtils.queryNumEntries(database, DbContract.TrackTable.TABLE_NAME);
-
-        /*String count = "SELECT COUNT(*) FROM " + DbContract.TrackTable.TABLE_NAME;
-        Cursor cursor = database.rawQuery(count, null);
-        int max = cursor.getCount();*/
-
         database.close();
-        //cursor.close();
+
+        return max;
+    }
+
+    public int getNumberOfRowsKooDB() {
+        SQLiteDatabase database = this.getReadableDatabase();
+        int max = (int) DatabaseUtils.queryNumEntries(database, DbContract.KoordinateTable.TABLE_NAME);
+        database.close();
 
         return max;
     }
 
     public String getLatestName () {
-        int i = getNumberOfRows();
+        int i = getNumberOfRowsTrackDB();
         String latestName = "";
 
         String selectQ = "SELECT * FROM " + DbContract.TrackTable.TABLE_NAME;
@@ -117,5 +120,48 @@ public class DbHelper extends SQLiteOpenHelper {
 
         database.insert(DbContract.TrackTable.TABLE_NAME, null, trackVals);
         database.close();
+    }
+
+    public void saveKoos (ArrayList<Location> locations, Track track) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues kooVals = new ContentValues();
+        Log.i("LOCATIONS", String.valueOf(locations.size()));
+        final int REFNUMBER = track.getId();
+        for (int i = 0; i < locations.size(); i++) {
+            kooVals.put(DbContract.KoordinateTable.COLUMN_Koordinate_TRACKREFNUMBER, REFNUMBER);
+            kooVals.put(DbContract.KoordinateTable.COLUMN_Koordinate_LAT, String.valueOf(locations.get(i).getLatitude()));
+            kooVals.put(DbContract.KoordinateTable.COLUMN_Koordinate_LNG, String.valueOf(locations.get(i).getLongitude()));
+            kooVals.put(DbContract.KoordinateTable.COLUMN_Koordinate_MODE, "MODE DEFAULT");
+            Log.i("LOCATIONS", "Index: " + String.valueOf(i));
+            database.insert(DbContract.KoordinateTable.TABLE_NAME, null, kooVals);
+        }
+
+        database.close();
+    }
+
+    //Hier wird das Location-Array aus der Datenbank zurückgebastelt
+    public ArrayList<Location> getLocationsFromDB (Track track) {
+        ArrayList<Location> locations = new ArrayList<>();
+        final int REFNUMBER = track.getId();
+        String selectQ = "SELECT * FROM " + DbContract.KoordinateTable.TABLE_NAME +
+                " WHERE " + DbContract.KoordinateTable.COLUMN_Koordinate_TRACKREFNUMBER +
+                " = " + REFNUMBER;
+        SQLiteDatabase database = this.getReadableDatabase();
+        Cursor cursor = database.rawQuery(selectQ, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String dbContentLat = cursor.getString(cursor.getColumnIndex(DbContract.KoordinateTable.COLUMN_Koordinate_LAT));
+                String dbContentLng = cursor.getString(cursor.getColumnIndex(DbContract.KoordinateTable.COLUMN_Koordinate_LNG));
+
+                Location location = new Location("Location");
+                location.setLatitude(Double.parseDouble(dbContentLat));
+                location.setLongitude(Double.parseDouble(dbContentLng));
+                locations.add(location);
+
+            } while (cursor.moveToNext());
+        }
+
+        return  locations;
     }
 }

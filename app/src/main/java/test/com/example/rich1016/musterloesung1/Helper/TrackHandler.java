@@ -44,9 +44,6 @@ public class TrackHandler {
         mLocationList = new ArrayList<>();
     }
 
-    /*public Location getCurrLocation () {
-        double lat = mLocation.getLatitude()
-    }*/
     private LatLng convertToLatLng (Location location) {
         double lat = location.getLatitude();
         double lng = location.getLongitude();
@@ -54,33 +51,29 @@ public class TrackHandler {
         return latLng;
     }
 
-    double dist;
+    /*double dist;
 
-    public double calculateLength (ArrayList<Location> locations) {
-        for (int i = 0; i < locations.size(); i++){
-            Location lastLoc = locations.get(i);
-            Location nextLoc = locations.get(i+1);
+    public double calculateLength () {
+        for (int i = 0; i < mLocationList.size() - 1; i++){
+            LatLng latest = convertToLatLng(mLocationList.get(i));
+            LatLng next = convertToLatLng(mLocationList.get(i+1));
+            dist = dist +  Location
 
-
-            dist = dist + (double) lastLoc.distanceTo(nextLoc);
+//            dist = dist + (double) lastLoc.distanceTo(nextLoc);
         }
         return dist;
-    }
+    }*/
 
     public void draw(Location location) {
+
+//        dist = 0.0;
 
         mLocationList.add(location);
         double lat;
         double lon;
         PolylineOptions options = new PolylineOptions().width(12).color(Color.CYAN);
-        for (int i = 0; i < mLocationList.size(); i++) {
+        for (int i = 0; i<mLocationList.size(); i++) {
             Location tempLocation = mLocationList.get(i);
-            if (i!=0) {
-                Location lastLocation = mLocationList.get(i-1);
-            } else {
-                Location lastLocation = mLocationList.get(0);
-            }
-            Location nextLocation = mLocationList.get(i);
             lat = tempLocation.getLatitude();
             lon = tempLocation.getLongitude();
             LatLng latlng = new LatLng(lat, lon);

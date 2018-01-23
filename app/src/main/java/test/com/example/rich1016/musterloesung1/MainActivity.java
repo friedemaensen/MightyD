@@ -2,7 +2,6 @@ package test.com.example.rich1016.musterloesung1;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -15,7 +14,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -76,16 +74,18 @@ public class MainActivity extends AppCompatActivity
     long startTime;
     long calcDuration;
 
+    ArrayList<Location> locationArrayList;
+    ArrayList<Mode> modeArrayList;
+
     private LatLng startLoc;
     private LatLng stopLoc;
 
     public void startTracking() {
         track = new Track();
-        //track.setId(DbHelper.getInstance(MainActivity.this).getMaxID() + 1);
-        track.setId(DbHelper.getInstance(MainActivity.this).getNumberOfRows() + 1);
+        track.setId(DbHelper.getInstance(MainActivity.this).getNumberOfRowsTrackDB() + 1);
 
         startTime = System.currentTimeMillis();
-        track.setDate(Long.toString(startTime));
+        track.setDate(String.valueOf(startTime));
         createLocationRequest();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -97,26 +97,30 @@ public class MainActivity extends AppCompatActivity
         if (System.currentTimeMillis()>startTime) {
             calcDuration = System.currentTimeMillis() - startTime;
         }
-        track.setDuration(Long.toString(calcDuration));
-        ArrayList<Location> locations = TrackHandler.getInstance(MainActivity.this).getmLocationList();
-        track.setLength(TrackHandler.getInstance(MainActivity.this).calculateLength(locations));
+
+        track.setDuration(String.valueOf(calcDuration));
+        track.setLength((double) calculateDist(locationArrayList));
         //TODO get name from NameFragment
         //TODO save on NameFragment.saveButton
 
 
 
         Log.i("DATEN", DbHelper.getInstance(MainActivity.this).getLatestName());
-        Log.i("DATEN", Integer.toString(DbHelper.getInstance(MainActivity.this).getNumberOfRows()));
+        Log.i("DATEN", Integer.toString(DbHelper.getInstance(MainActivity.this).getNumberOfRowsTrackDB()));
     }
 
+    public float calculateDist (ArrayList<Location> locations) {
+        float dist = 0;
 
-    public Track getTrack() {
-        return track;
+        for (int i = 0; i < locations.size() - 1; i++) {
+            if(i != locations.size()) {
+                dist = dist + locations.get(i).distanceTo(locations.get(i + 1));
+            }
+        }
+
+        return dist;
     }
 
-    public void setTrack(Track track) {
-        this.track = track;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,6 +159,7 @@ public class MainActivity extends AppCompatActivity
                 if (!isTracking) {
                     buttonTrack.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cast_ic_mini_controller_stop));
                     isTracking = true;
+                    locationArrayList = new ArrayList<>();
                     //mMap.clear();
                     startTracking();
                 } else {
@@ -162,7 +167,11 @@ public class MainActivity extends AppCompatActivity
                     NameFragment nameFragment = new NameFragment();
                     nameFragment.show(getSupportFragmentManager(), "");
 
+
+
                     stopTracking();
+
+                    Log.i("SIZE_KOO_DB", String.valueOf(DbHelper.getInstance(MainActivity.this).getNumberOfRowsKooDB()));
 
                     isTracking = false;
                     mTrackHandler.stopDraw();
@@ -195,15 +204,10 @@ public class MainActivity extends AppCompatActivity
 
         createLocationRequest();
 
-
-
-
-
-
-
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
+
                 for (Location location : locationResult.getLocations()) {
                     if (location != null) {
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
@@ -215,7 +219,8 @@ public class MainActivity extends AppCompatActivity
                         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                         if (isTracking) {
                             mTrackHandler.draw(location);
-
+                            locationArrayList.add(location);
+                            Log.i("ARRAY", String.valueOf(locationArrayList.size()));
                         }
                     }
 
@@ -224,20 +229,6 @@ public class MainActivity extends AppCompatActivity
         };
         startLocationUpdates();
 
-        //Hier wird ListView erstellt
-
-        /*final ListView listView = (ListView) findViewById(R.id.listView);
-        userListViewAdapter = new UserListViewAdapter(this, UserData.getInstance().getUserList());
-        listView.setAdapter(userListViewAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this, AusgabeActivity.class);
-
-                intent.putExtra(KEY, position);
-                startActivity(intent);
-            }
-        });*/
     }
 
 
@@ -359,9 +350,6 @@ public class MainActivity extends AppCompatActivity
 
         mTrackHandler = new TrackHandler(this, mMap);
 
-
-
-
         LatLng karlsruhe = new LatLng(49.008085, 8.403756);
         mMap.addMarker(new MarkerOptions().position(karlsruhe).title("Marker in Karlsruhe"));
 
@@ -408,10 +396,9 @@ public class MainActivity extends AppCompatActivity
          if (id == R.id.nav_last_tracks) {
              Intent intent = new Intent(MainActivity.this, TrackOverviewActivity.class);
              startActivity(intent);
-
         }  else if (id == R.id.nav_imprint) {
-
-
+             Intent intent = new Intent(MainActivity.this, ImprintActivity.class);
+             startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -424,7 +411,6 @@ public class MainActivity extends AppCompatActivity
         mLocationRequest.setInterval(5000);
         mLocationRequest.setFastestInterval(3000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
     }
 
     private void startLocationUpdates() {
@@ -479,8 +465,9 @@ public class MainActivity extends AppCompatActivity
     public void onFragmentInteraction(String trackname) {
         track.setName(trackname);
         DbHelper.getInstance(MainActivity.this).saveTrackToDB(track);
+        DbHelper.getInstance(MainActivity.this).saveKoos(locationArrayList, track);
         Log.i("DATEN", DbHelper.getInstance(MainActivity.this).getLatestName());
-        Log.i("DATEN", Integer.toString(DbHelper.getInstance(MainActivity.this).getNumberOfRows()));
+        Log.i("DATEN", Integer.toString(DbHelper.getInstance(MainActivity.this).getNumberOfRowsTrackDB()));
     }
 }
 

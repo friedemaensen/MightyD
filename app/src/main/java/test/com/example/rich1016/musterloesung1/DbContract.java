@@ -32,15 +32,17 @@ public class DbContract {
 
         public static final String TABLE_NAME = "koo_table";
         public static final String COLUMN_Koordinate_TRACKREFNUMBER = "koo_tracknumber";
-        public static final String COLUMN_Track_MODE = "track_verkehrsmittel";
-        public static final String COLUMN_Koordinate_KOO = "koo_koo";
+        public static final String COLUMN_Koordinate_MODE = "track_verkehrsmittel";
+        public static final String COLUMN_Koordinate_LAT = "koo_lat";
+        public static final String COLUMN_Koordinate_LNG = "koo_lng";
 
     }
 
-    public static final String SQL_CREATE_META_TABLE = "CREATE TABLE " + KoordinateTable.TABLE_NAME + " (" +
+    public static final String SQL_CREATE_KOORDINATE_TABLE = "CREATE TABLE " + KoordinateTable.TABLE_NAME + " (" +
             KoordinateTable._ID + " INTEGER PRIMARY KEY," +
-            KoordinateTable.COLUMN_Koordinate_TRACKREFNUMBER + " TEXT," +
-            KoordinateTable.COLUMN_Track_MODE + " TEXT," +
-            KoordinateTable.COLUMN_Koordinate_KOO + " TEXT)";
+            KoordinateTable.COLUMN_Koordinate_TRACKREFNUMBER + " INTEGER," +
+            KoordinateTable.COLUMN_Koordinate_MODE + " TEXT," +
+            KoordinateTable.COLUMN_Koordinate_LAT + " TEXT," +
+            KoordinateTable.COLUMN_Koordinate_LNG + " TEXT)";
 }
 
