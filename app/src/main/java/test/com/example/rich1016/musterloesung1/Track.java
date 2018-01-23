@@ -1,14 +1,15 @@
 package test.com.example.rich1016.musterloesung1;
 
+import java.io.Serializable;
+
 /**
  * Created by vofr1011 on 20.01.2018.
  */
 
-public class Track {
+public class Track implements Serializable {
     private int id;
     private String name;
     private String date;
-    private String mode;
     private String duration;
     private double length;
 
@@ -34,14 +35,6 @@ public class Track {
 
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public String getMode() {
-        return mode;
-    }
-
-    public void setMode(String mode) {
-        this.mode = mode;
     }
 
     public String getDuration() {

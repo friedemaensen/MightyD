@@ -15,11 +15,21 @@
     <string name="gpsConfirmation_no">Nein</string>
 
     <string name="nav_last_tracks">Letzte Tracks</string>
-    <string name ="nav_imprint">Impressum</string>
+    <string name="nav_imprint">Impressum</string>
 
     <string name="abbruch">Abbruch</string>
     <string name="savebutton">Speichern</string>
 
     <string name="choose_vm">Bitte wählen Sie ein Verkehrsmittel aus:</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="id">ID</string>
+    <string name="name">Name</string>
+    <string name="date">Datum</string>
+    <string name="duration">Dauer</string>
+    <string name="length">Länge</string>
+    <string name="title_activity_track_overview">TrackOverviewActivity</string>
 
 </resources>

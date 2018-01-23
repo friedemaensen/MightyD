@@ -7,6 +7,7 @@ package test.com.example.rich1016.musterloesung1;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -45,33 +46,34 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public int getNumberOfRows() {
         SQLiteDatabase database = this.getReadableDatabase();
-        String count = "SELECT COUNT(*) FROM " + DbContract.TrackTable.TABLE_NAME;
+
+        int max = (int) DatabaseUtils.queryNumEntries(database, DbContract.TrackTable.TABLE_NAME);
+
+        /*String count = "SELECT COUNT(*) FROM " + DbContract.TrackTable.TABLE_NAME;
         Cursor cursor = database.rawQuery(count, null);
-        int max = cursor.getCount();
+        int max = cursor.getCount();*/
 
         database.close();
-        cursor.close();
+        //cursor.close();
 
         return max;
     }
 
-    public int getMaxID() {
-        SQLiteDatabase database = this.getReadableDatabase();
-        String SelectMax = "SELECT MAX(" + DbContract.TrackTable.COLUMN_Track_ID + ") FROM " +
-                DbContract.TrackTable.TABLE_NAME;
-        Cursor cursor = database.rawQuery(SelectMax, null);
-        int max;
+    public String getLatestName () {
+        int i = getNumberOfRows();
+        String latestName = "";
 
-        if (cursor.getCount() > 0) {
-            max = cursor.getInt(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_ID));
-        } else {
-            max = 0;
+        String selectQ = "SELECT * FROM " + DbContract.TrackTable.TABLE_NAME;
+        SQLiteDatabase database = this.getReadableDatabase();
+        Cursor cursor = database.rawQuery(selectQ, null);
+        if (cursor.moveToLast()){
+                latestName = cursor.getString(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_NAME));
         }
+
         cursor.close();
         database.close();
-        return max;
 
-
+        return latestName;
     }
 
     public void getTrackDB() {
@@ -83,7 +85,6 @@ public class DbHelper extends SQLiteOpenHelper {
             do {
                 int id = cursor.getInt(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_ID));
                 String name = cursor.getString(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_NAME));
-                String mode = cursor.getString(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_MODE));
                 String date = cursor.getString(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_DATE));
                 double length = cursor.getDouble(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_LENGTH));
                 String duration = cursor.getString(cursor.getColumnIndex(DbContract.TrackTable.COLUMN_Track_DURATION));
@@ -92,7 +93,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
                 track.setId(id);
                 track.setName(name);
-                track.setMode(mode);
                 track.setDuration(duration);
                 track.setDate(date);
                 track.setLength(length);
@@ -112,7 +112,6 @@ public class DbHelper extends SQLiteOpenHelper {
         trackVals.put(DbContract.TrackTable.COLUMN_Track_ID, track.getId());
         trackVals.put(DbContract.TrackTable.COLUMN_Track_NAME, track.getName());
         trackVals.put(DbContract.TrackTable.COLUMN_Track_DATE, track.getDate());
-        trackVals.put(DbContract.TrackTable.COLUMN_Track_MODE, track.getMode());
         trackVals.put(DbContract.TrackTable.COLUMN_Track_DURATION, track.getDuration());
         trackVals.put(DbContract.TrackTable.COLUMN_Track_LENGTH, track.getLength());
 

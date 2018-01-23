@@ -2,6 +2,7 @@ package test.com.example.rich1016.musterloesung1;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -14,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -73,6 +75,7 @@ public class MainActivity extends AppCompatActivity
     Track track;
     long startTime;
     long calcDuration;
+
     private LatLng startLoc;
     private LatLng stopLoc;
 
@@ -97,16 +100,23 @@ public class MainActivity extends AppCompatActivity
         track.setDuration(Long.toString(calcDuration));
         ArrayList<Location> locations = TrackHandler.getInstance(MainActivity.this).getmLocationList();
         track.setLength(TrackHandler.getInstance(MainActivity.this).calculateLength(locations));
-        track.setMode("EXAMPLE MODE");
         //TODO get name from NameFragment
         //TODO save on NameFragment.saveButton
-        DbHelper.getInstance(MainActivity.this).saveTrackToDB(track);
 
+
+
+        Log.i("DATEN", DbHelper.getInstance(MainActivity.this).getLatestName());
         Log.i("DATEN", Integer.toString(DbHelper.getInstance(MainActivity.this).getNumberOfRows()));
-
-        //TODO setMode
     }
 
+
+    public Track getTrack() {
+        return track;
+    }
+
+    public void setTrack(Track track) {
+        this.track = track;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +145,8 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+
+
         final FloatingActionButton buttonTrack = (FloatingActionButton) findViewById(R.id.button_track);
         buttonTrack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,7 +161,9 @@ public class MainActivity extends AppCompatActivity
                     buttonTrack.setImageDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.ic_add_black_24dp));
                     NameFragment nameFragment = new NameFragment();
                     nameFragment.show(getSupportFragmentManager(), "");
+
                     stopTracking();
+
                     isTracking = false;
                     mTrackHandler.stopDraw();
 
@@ -392,6 +406,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
          if (id == R.id.nav_last_tracks) {
+             Intent intent = new Intent(MainActivity.this, TrackOverviewActivity.class);
+             startActivity(intent);
 
         }  else if (id == R.id.nav_imprint) {
 
@@ -458,7 +474,16 @@ public class MainActivity extends AppCompatActivity
     private void stopLocationUpdates(){
         mFusedLocationClient.removeLocationUpdates(mLocationCallback);
     }
+
+    @Override
+    public void onFragmentInteraction(String trackname) {
+        track.setName(trackname);
+        DbHelper.getInstance(MainActivity.this).saveTrackToDB(track);
+        Log.i("DATEN", DbHelper.getInstance(MainActivity.this).getLatestName());
+        Log.i("DATEN", Integer.toString(DbHelper.getInstance(MainActivity.this).getNumberOfRows()));
+    }
 }
+
 
 
 
