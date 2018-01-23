@@ -50,10 +50,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".TrackDetailActivity" />
-        <activity
-            android:name=".TrackOverviewActivity"
-            android:label="@string/title_activity_track_overview"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".TrackOverviewActivity"></activity>
     </application>
 
 </manifest>

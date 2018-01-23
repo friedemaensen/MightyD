@@ -13,7 +13,7 @@ import java.util.List;
  * Created by vofr1011 on 23.01.2018.
  */
 
-public class TrackListViewAdapter extends BaseAdapter {
+public class  TrackListViewAdapter extends BaseAdapter {
 
     LayoutInflater layoutInflater;
     List<Track> trackList;

@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by vofr1011 on 20.01.2018.
  */
 
-public class Track implements Serializable {
+public class Track {
     private int id;
     private String name;
     private String date;

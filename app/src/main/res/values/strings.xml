@@ -32,4 +32,6 @@
     <string name="length">Länge</string>
     <string name="title_activity_track_overview">TrackOverviewActivity</string>
 
+    <string name="map">Karte</string>
+
 </resources>
